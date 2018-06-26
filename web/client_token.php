@@ -33,6 +33,6 @@ echo 'Client token: ' . $response->auth->client_token . '<br>' . PHP_EOL;
 echo 'Policies: ' . implode(', ', $response->auth->policies) . '<br>' . PHP_EOL;
 echo 'Lease time: ' . $response->auth->lease_duration . '<br>' . PHP_EOL;
 
-putenv('VAULT_ACCESS_TOKEN=' . $response->auth->client_token);
+file_put_contents(__DIR__ . '/.client', $response->auth->client_token);
 
-echo '<a href="/db.php">Go to DB connection</a>';
+echo '<a href="/vault.php">Go to DB connection</a>';

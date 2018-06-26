@@ -1,5 +1,7 @@
 <?php
-putenv('VAULT_ACCESS_TOKEN=c6e29969-de5c-6dbb-94c1-a8ff769c9630');
+
+$contents = file_get_contents(__DIR__ . '/.client');
+putenv('VAULT_ACCESS_TOKEN=' . $contents);
 
 $pageTitle = 'PoC - Web App security with Hashicorp Vault';
 $flagLink = 'https://europa.eu/european-union/sites/europaeu/files/country_images/flags/flag-%s.jpg';
