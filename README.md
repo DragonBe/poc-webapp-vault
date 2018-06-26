@@ -50,9 +50,13 @@ At first you'll see an error message that states you don't have permissions.
 
 > Not allowed to retrieve credentials: Client error: `GET http://vault:8200/v1/database/creds/webapp` resulted in a `403 Forbidden` response: {"errors":["permission denied"]} 
 
+[![Vault Error](http://cdn.in2it.be/vault/webapp/vault_error.png)](http://cdn.in2it.be/vault/webapp/vault_error.png)
+
 Follow the link to retrieve the credentials and come back.
 
 Now you should see the same EU countries page, but now coming from the database.
+
+[![Vault Success](https://cdn.in2it.be/vault/webapp/vault_success.png)](https://cdn.in2it.be/vault/webapp/vault_success.png)
 
 This PoC is provided "as-is" and is licensed MIT.
 
