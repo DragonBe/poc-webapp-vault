@@ -1,0 +1,74 @@
+version: '3'
+services:
+
+  php:
+    container_name: bassec_php
+    build:
+      context: ./docker/php
+    volumes:
+      - ./web:/var/www/html/site/web
+      - ./data:/var/www/html/site/data
+      - ./vendor:/var/www/html/site/vendor
+    networks:
+      - frontend
+      - mixed
+      - backend
+    depends_on:
+      - mysql
+      - vault
+
+  nginx:
+    container_name: bassec_nginx
+    build:
+      context: ./docker/nginx
+    volumes:
+      - ./web:/var/www/html/site/web
+      - ./data:/var/www/html/site/data
+      - ./vendor:/var/www/html/site/vendor
+      - ./docker/nginx/conf/nginx.conf:/etc/nginx/conf.d/site.conf:ro
+    ports:
+      - 8080:80
+    networks:
+      - frontend
+      - mixed
+    depends_on:
+      - php
+
+  mysql:
+    container_name: bassec_mysql
+    build:
+      context: ./docker/mysql
+      args:
+        character-set-server: utf8mb4
+        collation-server: utf8mb4_col
+    ports:
+      - 33060:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: 'ob7apadEGAcUrJ0M4N6iDilAsRiR'
+        MYSQL_ROOT_HOST: '%'
+        MYSQL_LOG_CONSOLE: 1
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - backend
+
+  vault:
+    container_name: bassec_vault
+    build:
+      context: ./docker/vault
+    ports:
+      - 8200:8200
+    volumes:
+      - ./vault/logs:/vault/logs
+      - ./vault/file:/vault/file
+      - ./vault/config:/vault/config
+    networks:
+      - backend
+      - mixed
+    depends_on:
+      - mysql
+
+networks:
+  frontend:
+  mixed:
+  backend:
