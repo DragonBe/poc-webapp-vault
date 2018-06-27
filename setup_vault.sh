@@ -52,7 +52,7 @@ fi
 echo "Found secret ID $secretId"
 
 
-echo "{\"role_id\": \"$roleId\", \"secret_id\": \"$secretId\"}" > web/payload.json
+echo "{\"role_id\": \"$roleId\", \"secret_id\": \"$secretId\"}" > config/payload.json
 
 vault secrets enable database
 vault write database/config/europe plugin_name=mysql-database-plugin connection_url="{{username}}:{{password}}@tcp(mysql:3306)/" allowed_roles="webapp" username="vault" password="vault"

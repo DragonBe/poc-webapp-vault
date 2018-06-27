@@ -1,6 +1,6 @@
 <?php
 
-$contents = file_get_contents(__DIR__ . '/.client');
+$contents = file_get_contents(__DIR__ . '/../config/.client');
 putenv('VAULT_ACCESS_TOKEN=' . $contents);
 
 $pageTitle = 'PoC - Web App security with Hashicorp Vault';

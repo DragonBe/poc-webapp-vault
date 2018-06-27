@@ -9,6 +9,7 @@ services:
       - ./web:/var/www/html/site/web
       - ./data:/var/www/html/site/data
       - ./vendor:/var/www/html/site/vendor
+      - ./config:/var/www/html/site/config
     networks:
       - frontend
       - mixed
@@ -25,6 +26,7 @@ services:
       - ./web:/var/www/html/site/web
       - ./data:/var/www/html/site/data
       - ./vendor:/var/www/html/site/vendor
+      - ./config:/var/www/html/site/config
       - ./docker/nginx/conf/nginx.conf:/etc/nginx/conf.d/site.conf:ro
     ports:
       - 8080:80

@@ -5,4 +5,5 @@ COPY conf/nginx.conf /etc/nginx/conf.d/site.conf
 VOLUME /var/www/html/site/web
 VOLUME /var/www/html/site/data
 VOLUME /var/www/html/site/vendor
+VOLUME /var/www/html/site/config
 EXPOSE 80
