@@ -1,15 +1,23 @@
 # Hashicorp Vault for PHP Web Application Security - PoC
 
-This is a **Proof-of-Concept** for having a PHP web application connect to a database using credentials provided by [Hashicorp Vault]. The goal is to have a basic understanding how [Hashicorp Vault] works in managing secrets and how web applications can make use of it to secure their authentication credentials.
+This is a **Proof-of-Concept** for having a PHP web application connect to a database using credentials provided by 
+[Hashicorp Vault]. The goal is to have a basic understanding how [Hashicorp Vault] works in managing secrets 
+and how web applications can make use of it to secure their authentication credentials.
+
+The server in this scenario is running in **dev** mode. The dev server stores all its data in-memory (but still encrypted), 
+listens on localhost without TLS, and automatically unseals and shows you the unseal key and root access key. 
+**Do not run a dev server in production!**
 
 ## Requirements
 
 We're using [Docker] to set up our environment:
 
-- Web server: running [Nginx](https://www.nginx.com/)
-- PHP FPM: running [PHP FPM 7.2](https://secure.php.net/fpm)
-- Database server: running [MySQL 5.7](https://www.mysql.com)
+- Web server: running [Nginx]
+- PHP FPM: running [PHP FPM 7.2]
+- Database server: running [MySQL 5.7]
 - Secrets manager: running [Hashicorp Vault]
+- [cURL]
+- [jq]
 
 ## Setup
 
@@ -34,10 +42,17 @@ docker-compose up
 
 ### 3. Provision Hashicorp Vault
 
-For your convenience we have created a provision script to set up vault so it's ready to accept your requests
+For your convenience we have created two provisioning scripts to set up vault so it's ready to accept your requests
 
+If you want to use [Vault CLI], you need to have [Hashicorp Vault] installed locally, and then run execute
+```bash
+/bin/bash ./setup_vault_with_vault_cli.sh
 ```
-/bin/bash ./setup_vault.sh
+in your terminal.
+
+Or, if you want to use [Vault HTTP API], you **do not need** [Hashicorp Vault] installed locally, just execute
+```bash
+/bin/bash ./setup_vault_with_http_api.sh
 ```
 
 ### 4. Check if it's all working
@@ -66,3 +81,10 @@ Please see also my [notes](docs/notes.md) for more details about the setup and c
 
 [Hashicorp Vault]: https://vaultproject.io
 [Docker]: https://docker.com
+[Nginx]: https://www.nginx.com/
+[PHP FPM 7.2]: https://secure.php.net/fpm
+[MySQL 5.7]: https://www.mysql.com
+[cURL]: https://curl.haxx.se/
+[jq]: https://stedolan.github.io/jq/
+[Vault CLI]: https://www.vaultproject.io/docs/commands/index.html
+[Vault HTTP API]: https://www.vaultproject.io/api/index.html
