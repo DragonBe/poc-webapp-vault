@@ -1,10 +1,12 @@
 # Hashicorp Vault - Application Access
 
-To provide a secure way of dealing with application resource access credentials, we're going to look at [Hashicorp Vault](https://vaultproject.io) to manage our application secrets.
+To provide a secure way of dealing with application resource access credentials, we're going to look at 
+[Hashicorp Vault](https://vaultproject.io) to manage our application secrets.
 
 ## Step 1: Login into Vault as root
 
-In order to get started, we need to login as **root** user. Be sure to have your credentials at hand, as you will need them to login.
+In order to get started, we need to login as **root** user. Be sure to have your credentials at hand, as you will need 
+them to login.
 
 ```bash
 vault login
@@ -35,7 +37,9 @@ vault audit enable file file_path=/vault/logs/vault_audit.log
 
 ## Step 2: Create an admin policy
 
-By default Vault is set with root privileges, but this privilege level has too much power and should be avoided. It's better to create an administrative account that has less rights than the root privilege, but can still create accounts within Vault.
+By default Vault is set with root privileges, but this privilege level has too much power and should be avoided. 
+It's better to create an administrative account that has less rights than the root privilege, 
+but can still create accounts within Vault.
 
 Reference: 
 
@@ -107,7 +111,8 @@ Vault will respond with a success statement making sure everything is registered
 Success! Uploaded policy: admin
 ```
 
-Make sure you look at the example and modify the policy for your own use case! This example is a default example taken from the [Hashicorp Vault Policies Guide](https://www.vaultproject.io/guides/identity/policies.html).
+Make sure you look at the example and modify the policy for your own use case! This example is a default example taken 
+from the [Hashicorp Vault Policies Guide](https://www.vaultproject.io/guides/identity/policies.html).
 
 ## Step 3: Create a token for policy admin
 
@@ -129,7 +134,8 @@ token_renewable    true
 token_policies     [admin default]
 ```
 
-With this token we can now check the capabilities for the role **approle** as we're going to use it for setting up the permissions for our web application.
+With this token we can now check the capabilities for the role **approle** as we're going to use it for setting up the 
+permissions for our web application.
 
 ```bash
 vault token capabilities 0e7f0f87-3f60-cbe7-1aa8-6c4f707ffba8 sys/auth/approle
@@ -150,7 +156,8 @@ vault login
 Token (will be hidden):
 ```
 
-When you have completed above steps, you should now be successfully logged in as user **admin**. Please check the output that it's really the case.
+When you have completed above steps, you should now be successfully logged in as user **admin**. Please check the output 
+that it's really the case.
 
 ```
 Success! You are now authenticated. The token information displayed below
@@ -166,7 +173,8 @@ token_renewable    true
 token_policies     [admin default]
 ```
 
-As you can see, our time is limited as an administrative account should perform only those tasks to set up and configure rules, policies and tokens.
+As you can see, our time is limited as an administrative account should perform only those tasks to set up and configure 
+rules, policies and tokens.
 
 ## Step 5: Enable AppRole in Vault
 
@@ -176,7 +184,8 @@ The special **AppRole** is not enabled by default in Vault, so we need to enable
 vault auth enable approle
 ```
 
-This will return us again with a success statement that the AppRole authentication method is activated and available in path `auth/approle/`.
+This will return us again with a success statement that the AppRole authentication method is activated and available in 
+path `auth/approle/`.
 
 ```
 Success! Enabled approle auth method at: approle/
@@ -184,7 +193,8 @@ Success! Enabled approle auth method at: approle/
 
 ## Step 6: Create the AppRole with the correct policies
 
-Just like we did for the administrative account, we need to define the policy for the AppRole. The following is an example policy for a web application that needs to connect to a database. Store this policy in `webapp-policy.hcl`.
+Just like we did for the administrative account, we need to define the policy for the AppRole. The following is an 
+example policy for a web application that needs to connect to a database. Store this policy in `webapp-policy.hcl`.
 
 ```json
 # Login with AppRole
@@ -203,7 +213,8 @@ path "database/*" {
 }
 ```
 
-Please make sure you set your policies for your own application as this example only focusses on giving the web application permission to login and read permissions for the MySQL database.
+Please make sure you set your policies for your own application as this example only focusses on giving the web 
+application permission to login and read permissions for the MySQL database.
 
 Now that we have the policy set, we can attach this policy to role **webapp**.
 
@@ -254,7 +265,8 @@ token_ttl                0
 
 ## Step 7: Get role and secret ID's to authenticate
 
-Now that the policy is set and the role created for our web application, it's time to collect the credentials our application needs to login into Vault.
+Now that the policy is set and the role created for our web application, it's time to collect the credentials our 
+application needs to login into Vault.
 
 ### Get the role ID
 
@@ -287,7 +299,8 @@ secret_id_accessor    9507facd-b89a-6a05-d317-8b3373407676
 
 Now that we have created the `role_id` and `secret_id` we can now use them in our application to login.
 
-The easiest way is to store a `payload.json` file with both ID's on the server that needs to connect (of course ensure only the application has access to it).
+The easiest way is to store a `payload.json` file with both ID's on the server that needs to connect 
+(of course ensure only the application has access to it).
 
 ```json
 {
@@ -296,7 +309,8 @@ The easiest way is to store a `payload.json` file with both ID's on the server t
 }
 ```
 
-Now we can use [Guzzle](https://packagist.org/packages/guzzlehttp/guzzle) in our web application to connect to our Vault instance and login with our credentials.
+Now we can use [Guzzle](https://packagist.org/packages/guzzlehttp/guzzle) in our web application to connect to our 
+Vault instance and login with our credentials.
 
 A simple PHP script will fetch the client token for us.
 
@@ -345,7 +359,8 @@ Policies: default, webapp
 Lease time: 2764800
 ```
 
-This **Client token** is the token we're going to use for connecting with the database, so keep this in memory for the duration of **Lease time**. Rerun this script to retrieve another token.
+This **Client token** is the token we're going to use for connecting with the database, so keep this in memory for 
+the duration of **Lease time**. Rerun this script to retrieve another token.
 
 ## Step 9: Set up database authentication in Vault
 
@@ -385,7 +400,8 @@ Now that we're **admin** we can enable the database secrets engine (off by defau
 vault secrets enable database
 ```
 
-This will return a success message. If you can't enable the database secrets engine, you might not have set the correct policy for user **admin**. Review **Step 2: Create an admin policy**.
+This will return a success message. If you can't enable the database secrets engine, you might not have set the correct 
+policy for user **admin**. Review **Step 2: Create an admin policy**.
 
 ```
 Success! Enabled the database secrets engine at: database/
@@ -393,18 +409,28 @@ Success! Enabled the database secrets engine at: database/
 
 ## Step 10: Define the MySQL plugin connection details
 
-Vault comes with a plugin for MySQL that we can use to connect to our database. We just need to provide a connection template and the **vault** account details.
+Vault comes with a plugin for MySQL that we can use to connect to our database. We just need to provide a connection 
+template and the **vault** account details.
 
 First we're going to activate the MySQL plugin for role `webapp`
 
 ```bash
-vault write database/config/europe plugin_name=mysql-database-plugin connection_url="{{username}}:{{password}}@tcp(mysql:3306)/" allowed_roles="webapp" username="vault" password="vault"
+vault write database/config/europe \
+plugin_name=mysql-database-plugin \
+connection_url="{{username}}:{{password}}@tcp(mysql:3306)/" \
+allowed_roles="webapp" \
+username="vault" \
+password="vault"
 ```
 
 Next we're going to map the role webapp in Vault so it can execute SQL commands.
 
 ```bash
-vault write database/roles/webapp db_name=europe creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON *.* TO '{{name}}'@'%'; GRANT SELECT, INSERT, UPDATE ON europe.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
+vault write database/roles/webapp \
+db_name=europe \
+creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON *.* TO '{{name}}'@'%'; GRANT SELECT, INSERT, UPDATE ON europe.* TO '{{name}}'@'%';" \
+default_ttl="1h" \
+max_ttl="24h"
 ```
 
 If all went well, you should receive a nice success response from Vault.
@@ -508,7 +534,8 @@ Success! Revoked lease: database/creds/webapp/559e0568-e824-1432-c6de-74b8a8d579
 
 ## Step 11: Retrieve DB credentials as web application
 
-Now that we both have a **webapp** role defined and a database for this role configured, it’s time to use Vault’s API to retrieve database credentials for our web app.
+Now that we both have a **webapp** role defined and a database for this role configured, it’s time to use Vault’s API 
+to retrieve database credentials for our web app.
 
 Here’s a small script to retrieve the lease credentials for the web application.
 
@@ -622,10 +649,15 @@ And when we wrap it in some nice HTML, we get something like this:
 
 ## Step 12: Improving secrets management
 
-Web applications are stateless by nature. The application's state is maintained by using caching, sessions and persistent storage in the background.
+Web applications are stateless by nature. The application's state is maintained by using caching, sessions and 
+persistent storage in the background.
 
-For the management of our secrets we can persist them on filesystem as the keys are renewed after expiration of lease time. The most important elements we need to protect are the `role-id` and `secret-id`.
+For the management of our secrets we can persist them on filesystem as the keys are renewed after expiration of lease time. 
+The most important elements we need to protect are the `role-id` and `secret-id`.
 
-A good practice would be that you set them as environment variable for the web server and store the client token and temporarily database secrets in a file with the application.
+A good practice would be that you set them as environment variable for the web server and store the client token and 
+temporarily database secrets in a file with the application.
 
-Vault offers audit logging of secrets access and such, so it would be a good idea to add monitoring on it to spot abnormalities in web application access to secrets. We have enabled it at the start of this step-by-step guide, have a look at it to understand what happened during the setup of this application.
+Vault offers audit logging of secrets access and such, so it would be a good idea to add monitoring on it to spot 
+abnormalities in web application access to secrets. We have enabled it at the start of this step-by-step guide, 
+have a look at it to understand what happened during the setup of this application.
